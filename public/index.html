@@ -5,107 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>إدارة ورشة النجارة</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background-color: #f4f7f6;
-            color: #333;
-            display: flex;
-            height: 100vh;
-            direction: rtl;
-        }
-
-        .sidebar {
-            width: 250px;
-            background-color: #2c3e50;
-            color: #ecf0f1;
-            padding: 20px;
-            height: 100%;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-            overflow-y: auto;
-        }
-
-        .sidebar h2 {
-            text-align: center;
-            color: #ffffff;
-            margin-bottom: 30px;
-            font-size: 1.5em;
-        }
-
-        .sidebar ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .sidebar ul li a {
-            display: block;
-            color: #bdc3c7;
-            padding: 12px 15px;
-            text-decoration: none;
-            border-radius: 4px;
-            margin-bottom: 8px;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        .sidebar ul li a:hover,
-        .sidebar ul li a.active {
-            background-color: #34495e;
-            color: #ffffff;
-        }
-
-        .main-content {
-            flex-grow: 1;
-            padding: 30px;
-            overflow-y: auto;
-            background-color: #ffffff;
-        }
-
-        .content-section {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-        }
-        
+        body { font-family: Arial, sans-serif; margin: 0; background-color: #f4f7f6; color: #333; display: flex; height: 100vh; direction: rtl; }
+        .sidebar { width: 250px; background-color: #2c3e50; color: #ecf0f1; padding: 20px; height: 100%; box-shadow: 2px 0 5px rgba(0,0,0,0.1); overflow-y: auto; }
+        .sidebar h2 { text-align: center; color: #ffffff; margin-bottom: 30px; font-size: 1.5em; }
+        .sidebar ul { list-style-type: none; padding: 0; }
+        .sidebar ul li a { display: block; color: #bdc3c7; padding: 12px 15px; text-decoration: none; border-radius: 4px; margin-bottom: 8px; transition: background-color 0.3s ease, color 0.3s ease; }
+        .sidebar ul li a:hover, .sidebar ul li a.active { background-color: #34495e; color: #ffffff; }
+        .main-content { flex-grow: 1; padding: 30px; overflow-y: auto; background-color: #ffffff; }
+        .content-section { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
         label { display: block; margin-top: 12px; font-weight: bold; }
-        input[type="text"], input[type="email"], input[type="tel"], textarea {
-            width: calc(100% - 24px); /* Adjusted for padding and border */
-            padding: 10px; 
-            margin-top: 5px; 
-            border: 1px solid #ccc; 
-            border-radius: 4px; 
-            box-sizing: border-box;
-            font-size: 1em;
-        }
-        textarea {
-            resize: vertical; /* Allow vertical resize only */
-        }
-        button {
-            background-color: #007bff; color: white; padding: 10px 15px; border: none;
-            border-radius: 4px; cursor: pointer; margin-top: 20px; font-size: 16px;
-        }
+        input[type="text"], input[type="email"], input[type="tel"], textarea { width: calc(100% - 24px); padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 1em; }
+        textarea { resize: vertical; }
+        button { background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; margin-top: 20px; font-size: 16px; }
         button:hover { background-color: #0056b3; }
-        
         #clientsList { list-style-type: none; padding: 0; margin-top: 20px; }
-        #clientsList li { 
-            background-color: #f0f0f0; 
-            padding: 12px; 
-            margin-bottom: 8px; 
-            border-radius: 4px; 
-            border-right: 5px solid #007bff; /* Changed to border-right for RTL */
-            padding-right: 10px; /* Added padding for the border */
-        }
+        #clientsList li { background-color: #f0f0f0; padding: 12px; margin-bottom: 8px; border-radius: 4px; border-right: 5px solid #007bff; padding-right: 10px; }
         #clientsList li strong { display: block; margin-bottom: 5px; }
-        
-        .message { 
-            padding: 12px; 
-            margin-top: 15px; 
-            border-radius: 4px; 
-            text-align: center; 
-            font-weight: bold;
-            display:none; /* Hidden by default */
-        }
+        .message { padding: 12px; margin-top: 15px; border-radius: 4px; text-align: center; font-weight: bold; display:none; }
         .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
         .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
     </style>
@@ -115,7 +31,7 @@
         <h2>ورشة النجارة</h2>
         <ul>
             <li><a href="#" id="navClients" class="active">إدارة العملاء</a></li>
-            </ul>
+        </ul>
     </div>
 
     <div class="main-content">
@@ -123,13 +39,13 @@
             <h1>إدارة العملاء</h1>
             <h2>إضافة عميل جديد</h2>
             <form id="addClientForm">
-                <label for="name">الاسم:</label>
+                <label for="name">الاسم: <span style="color:red;">*</span></label>
                 <input type="text" id="name" name="name" required>
 
-                <label for="civil_id">الرقم المدني (12 رقم):</label>
-                <input type="text" id="civil_id" name="civil_id" required minlength="12" maxlength="12" pattern="\d{12}">
+                <label for="civil_id">الرقم المدني (12 رقم إذا أُدخل):</label>
+                <input type="text" id="civil_id" name="civil_id" minlength="12" maxlength="12" pattern="\d{12}">
 
-                <label for="phone">رقم الهاتف (8 أرقام):</label>
+                <label for="phone">رقم الهاتف (8 أرقام إذا أُدخل):</label>
                 <input type="tel" id="phone" name="phone" maxlength="8" pattern="\d{8}">
 
                 <label for="email">البريد الإلكتروني:</label>
@@ -150,96 +66,42 @@
                 <li>جاري تحميل العملاء...</li>
             </ul>
         </div>
-
-        </div>
+    </div>
 
     <script>
         const addClientForm = document.getElementById('addClientForm');
         const clientsListElement = document.getElementById('clientsList');
         const formMessageClientElement = document.getElementById('formMessageClient');
-        
-        const navClients = document.getElementById('navClients');
-        const clientsSection = document.getElementById('clientsSection');
-        // const projectsSection = document.getElementById('projectsSection'); 
-        // const navProjects = document.getElementById('navProjects'); 
 
         const civilIdInput = document.getElementById('civil_id');
         const phoneInput = document.getElementById('phone');
 
-        // دالة لتحويل الأرقام الهندية/العربية إلى إنجليزية
         function convertArabicNumbersToEnglish(str) {
             if (typeof str !== 'string') return str;
             const arabicNumbers = /[\u0660-\u0669]/g;
-            const englishNumbers = {
-                '\u0660': '0', '\u0661': '1', '\u0662': '2', '\u0663': '3', '\u0664': '4',
-                '\u0665': '5', '\u0666': '6', '\u0667': '7', '\u0668': '8', '\u0669': '9'
-            };
-            return str.replace(arabicNumbers, function (match) {
-                return englishNumbers[match];
-            });
+            const englishNumbers = {'\u0660':'0','\u0661':'1','\u0662':'2','\u0663':'3','\u0664':'4','\u0665':'5','\u066٦':'6','\u0667':'7','\u0668':'8','\u066٩':'9'};
+            return str.replace(arabicNumbers, function (match) { return englishNumbers[match]; });
         }
 
-        // معالجة الإدخال في حقل الرقم المدني
         if (civilIdInput) {
             civilIdInput.addEventListener('input', function(event) {
                 let value = event.target.value;
                 value = convertArabicNumbersToEnglish(value);
-                value = value.replace(/[^\d]/g, ''); // السماح بالأرقام الإنجليزية فقط
-                if (value.length > 12) { // التأكد أن الطول لا يتجاوز 12
-                   value = value.slice(0, 12);
-                }
+                value = value.replace(/[^\d]/g, ''); 
+                if (value.length > 12) { value = value.slice(0, 12); }
                 event.target.value = value;
             });
         }
 
-        // معالجة الإدخال في حقل رقم الهاتف
         if (phoneInput) {
             phoneInput.addEventListener('input', function(event) {
                 let value = event.target.value;
                 value = convertArabicNumbersToEnglish(value);
-                value = value.replace(/[^\d]/g, ''); // السماح بالأرقام الإنجليزية فقط
-                if (value.length > 8) { // التأكد أن الطول لا يتجاوز 8
-                    value = value.slice(0, 8);
-                }
+                value = value.replace(/[^\d]/g, ''); 
+                if (value.length > 8) { value = value.slice(0, 8); }
                 event.target.value = value;
             });
         }
-        
-        function showSection(sectionToShow) {
-            clientsSection.style.display = 'none';
-            // projectsSection.style.display = 'none'; 
-
-            navClients.classList.remove('active');
-            // navProjects.classList.remove('active');
-
-            if (sectionToShow === 'clients') {
-                clientsSection.style.display = 'block';
-                navClients.classList.add('active');
-                fetchClients(); 
-            } 
-            /*
-            else if (sectionToShow === 'projects') {
-                projectsSection.style.display = 'block';
-                navProjects.classList.add('active');
-                // fetchProjects(); 
-            }
-            */
-        }
-
-        if(navClients){
-            navClients.addEventListener('click', (e) => {
-                e.preventDefault(); 
-                showSection('clients');
-            });
-        }
-        /*
-        if(navProjects){
-            navProjects.addEventListener('click', (e) => {
-                e.preventDefault();
-                showSection('projects');
-            });
-        }
-        */
 
         async function fetchClients() {
             clientsListElement.innerHTML = '<li>جاري تحميل العملاء...</li>';
@@ -260,9 +122,10 @@
                 clients.forEach(client => {
                     const listItem = document.createElement('li');
                     listItem.innerHTML = `
-                        <strong>${client.name}</strong> (الرقم المدني: ${client.civil_id})<br>
-                        الهاتف: ${client.phone || 'غير متوفر'} | الإيميل: ${client.email || 'غير متوفر'}<br>
-                        العنوان: ${client.address || 'لا يوجد'} | ملاحظات: ${client.notes || 'لا يوجد'}
+                        <strong>${client.name}</strong> ${client.client_code ? `(كود: ${client.client_code})` : ''}<br>
+                        الرقم المدني: ${client.civil_id || 'لم يُدخل'} | الهاتف: ${client.phone || 'غير متوفر'}<br>
+                        الإيميل: ${client.email || 'غير متوفر'} | العنوان: ${client.address || 'لا يوجد'}<br>
+                        ملاحظات: ${client.notes || 'لا يوجد'}
                     `;
                     clientsListElement.appendChild(listItem);
                 });
@@ -281,22 +144,26 @@
                 const formData = new FormData(this);
                 const clientData = {};
                 formData.forEach((value, key) => {
-                    let processedValue = value;
+                    let processedValue = value.trim(); // إزالة المسافات من البداية والنهاية
                     if (key === 'civil_id' || key === 'phone') {
-                        processedValue = convertArabicNumbersToEnglish(value).replace(/[^\d]/g, '');
+                        processedValue = convertArabicNumbersToEnglish(processedValue).replace(/[^\d]/g, '');
                     }
-                    clientData[key] = processedValue;
+                    // إذا كان الحقل فارغاً بعد المعالجة، أرسله كـ null أو لا ترسله أصلاً (حسب ما يتوقعه الباك إند)
+                    // الباك إند الحالي يحول الفارغ إلى null، لذا يمكن إرسال السلسلة الفارغة
+                    clientData[key] = processedValue; 
                 });
 
+                // التحقق من طول الرقم المدني إذا تم إدخاله وليس فارغاً
                 if (clientData.civil_id && clientData.civil_id.length !== 12) {
-                    formMessageClientElement.textContent = 'الرقم المدني يجب أن يتكون من 12 أرقام بالضبط.';
+                    formMessageClientElement.textContent = 'الرقم المدني يجب أن يتكون من 12 رقمًا إذا تم إدخاله.';
                     formMessageClientElement.className = 'message error';
                     formMessageClientElement.style.display = 'block';
                     return; 
                 }
-                
-                if (clientData.phone && clientData.phone.length > 0 && clientData.phone.length !== 8) { // تحقق فقط إذا تم إدخال شيء
-                    formMessageClientElement.textContent = 'رقم الهاتف يجب أن يتكون من 8 أرقام بالضبط.';
+
+                // التحقق من طول رقم الهاتف إذا تم إدخاله وليس فارغاً
+                if (clientData.phone && clientData.phone.length !== 8) {
+                    formMessageClientElement.textContent = 'رقم الهاتف يجب أن يتكون من 8 أرقام إذا تم إدخاله.';
                     formMessageClientElement.className = 'message error';
                     formMessageClientElement.style.display = 'block';
                     return; 
@@ -305,9 +172,7 @@
                 try {
                     const response = await fetch('/clients', {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
+                        headers: { 'Content-Type': 'application/json', },
                         body: JSON.stringify(clientData),
                     });
 
@@ -316,7 +181,7 @@
                     if (!response.ok) {
                         throw new Error(result.error || `خطأ HTTP: ${response.status} ${response.statusText}`);
                     }
-                    
+
                     formMessageClientElement.textContent = 'تمت إضافة العميل بنجاح!';
                     formMessageClientElement.className = 'message success';
                     formMessageClientElement.style.display = 'block';
@@ -331,6 +196,18 @@
             });
         }
 
+        // دالة لإظهار القسم (مبدئياً قسم العملاء فقط)
+        function showSection(sectionId) {
+            document.getElementById('clientsSection').style.display = 'none';
+            // لاحقاً نضيف أقسام أخرى هنا
+
+            if (sectionId === 'clients') {
+                document.getElementById('clientsSection').style.display = 'block';
+                document.getElementById('navClients').classList.add('active');
+                fetchClients();
+            }
+        }
+        // إظهار قسم العملاء افتراضياً
         document.addEventListener('DOMContentLoaded', () => {
             showSection('clients'); 
         });
