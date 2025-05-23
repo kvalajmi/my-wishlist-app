@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة ورشة النجارة</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f9f9f9; direction: rtl; color: #333; }
+        .container { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); max-width: 700px; margin: auto; }
+        h1, h2 { color: #333; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        label { display: block; margin-top: 12px; font-weight: bold; }
+        input[type="text"], input[type="email"], input[type="tel"], textarea {
+            width: calc(100% - 22px); padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff; color: white; padding: 10px 15px; border: none;
+            border-radius: 4px; cursor: pointer; margin-top: 20px; font-size: 16px;
+        }
+        button:hover { background-color: #0056b3; }
+        #clientsList { list-style-type: none; padding: 0; margin-top: 20px; }
+        #clientsList li { background-color: #f0f0f0; padding: 12px; margin-bottom: 8px; border-radius: 4px; border-left: 5px solid #007bff; }
+        #clientsList li strong { display: block; margin-bottom: 5px; }
+        .message { padding: 10px; margin-top: 15px; border-radius: 4px; text-align: center; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>نظام إدارة ورشة النجارة</h1>
+
+        <h2>إضافة عميل جديد</h2>
+        <form id="addClientForm">
+            <label for="name">الاسم:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="civil_id">الرقم المدني (12 رقم):</label>
+            <input type="text" id="civil_id" name="civil_id" required minlength="12" maxlength="12" pattern="\d{12}">
+
+            <label for="phone">رقم الهاتف:</label>
+            <input type="tel" id="phone" name="phone">
+
+            <label for="email">البريد الإلكتروني:</label>
+            <input type="email" id="email" name="email">
+
+            <label for="address">العنوان:</label>
+            <textarea id="address" name="address" rows="3"></textarea>
+
+            <label for="notes">ملاحظات:</label>
+            <textarea id="notes" name="notes" rows="3"></textarea>
+
+            <button type="submit">أضف العميل</button>
+            <div id="formMessage" class="message" style="display:none;"></div>
+        </form>
+
+        <h2>قائمة العملاء</h2>
+        <ul id="clientsList">
+            <li>جاري تحميل العملاء...</li>
+        </ul>
+    </div>
+
+    <script>
+        const addClientForm = document.getElementById('addClientForm');
+        const clientsListElement = document.getElementById('clientsList');
+        const formMessageElement = document.getElementById('formMessage');
+
+        async function fetchClients() {
+            clientsListElement.innerHTML = '<li>جاري تحميل العملاء...</li>';
+            try {
+                const response = await fetch('/clients');
+                if (!response.ok) {
+                    throw new Error(`خطأ HTTP: ${response.status} ${response.statusText}`);
+                }
+                const clients = await response.json();
+                clientsListElement.innerHTML = ''; 
+
+                if (clients.length === 0) {
+                    clientsListElement.innerHTML = '<li>لا يوجد عملاء حالياً.</li>';
+                    return;
+                }
+
+                clients.forEach(client => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <strong>${client.name}</strong> (الرقم المدني: ${client.civil_id})<br>
+                        الهاتف: ${client.phone || 'غير متوفر'} | الإيميل: ${client.email || 'غير متوفر'}<br>
+                        العنوان: ${client.address || 'لا يوجد'} | ملاحظات: ${client.notes || 'لا يوجد'}
+                    `;
+                    clientsListElement.appendChild(listItem);
+                });
+            } catch (error) {
+                console.error('فشل في جلب العملاء:', error);
+                clientsListElement.innerHTML = '<li>حدث خطأ أثناء تحميل العملاء. يرجى المحاولة لاحقاً.</li>';
+            }
+        }
+
+        addClientForm.addEventListener('submit', async function(event) {
+            event.preventDefault(); 
+            formMessageElement.textContent = '';
+            formMessageElement.style.display = 'none';
+
+            const formData = new FormData(this);
+            const clientData = {};
+            formData.forEach((value, key) => { clientData[key] = value; });
+
+            try {
+                const response = await fetch('/clients', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(clientData),
+                });
+
+                const result = await response.json(); // دائماً حاول قراءة الـ JSON
+
+                if (!response.ok) {
+                    // استخدم رسالة الخطأ من الـ API إذا كانت موجودة، وإلا استخدم رسالة عامة
+                    throw new Error(result.error || `خطأ HTTP: ${response.status} ${response.statusText}`);
+                }
+
+                formMessageElement.textContent = 'تمت إضافة العميل بنجاح!';
+                formMessageElement.className = 'message success';
+                formMessageElement.style.display = 'block';
+                this.reset(); 
+                fetchClients(); 
+            } catch (error) {
+                console.error('فشل في إضافة العميل:', error);
+                formMessageElement.textContent = `فشل في إضافة العميل: ${error.message}`;
+                formMessageElement.className = 'message error';
+                formMessageElement.style.display = 'block';
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', fetchClients);
+    </script>
+</body>
+</html>
