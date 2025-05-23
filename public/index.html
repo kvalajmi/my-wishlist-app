@@ -3,14 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إدارة ورشة النجارة</title>
+    <title>نظام إدارة ورشة النجارة</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f9f9f9; direction: rtl; color: #333; }
-        .container { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); max-width: 700px; margin: auto; }
-        h1, h2 { color: #333; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex; /* لتمكين الشريط الجانبي والمحتوى جنباً إلى جنب */
+            height: 100vh; /* لجعل الجسم يملأ ارتفاع الشاشة */
+            direction: rtl;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50; /* لون داكن للشريط الجانبي */
+            color: #ecf0f1; /* لون فاتح للنص في الشريط الجانبي */
+            padding: 20px;
+            height: 100%; /* ليملأ ارتفاع الجسم */
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            overflow-y: auto; /* لإضافة شريط تمرير إذا زاد المحتوى */
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            color: #ffffff;
+            margin-bottom: 30px;
+            font-size: 1.5em;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li a {
+            display: block;
+            color: #bdc3c7; /* لون أفتح قليلاً للروابط */
+            padding: 12px 15px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .sidebar ul li a:hover,
+        .sidebar ul li a.active { /* لتحديد الرابط النشط */
+            background-color: #34495e; /* لون أغمق عند المرور أو للرابط النشط */
+            color: #ffffff;
+        }
+
+        .main-content {
+            flex-grow: 1; /* ليأخذ المساحة المتبقية */
+            padding: 30px;
+            overflow-y: auto; /* لإضافة شريط تمرير إذا زاد المحتوى */
+            background-color: #ffffff;
+        }
+
+        .content-section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        
+        /* تنسيقات النموذج والقائمة (يمكن تحسينها لاحقاً) */
         label { display: block; margin-top: 12px; font-weight: bold; }
         input[type="text"], input[type="email"], input[type="tel"], textarea {
-            width: calc(100% - 22px); padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;
+            width: calc(100% - 24px); padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;
         }
         button {
             background-color: #007bff; color: white; padding: 10px 15px; border: none;
@@ -26,50 +87,100 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>نظام إدارة ورشة النجارة</h1>
-
-        <h2>إضافة عميل جديد</h2>
-        <form id="addClientForm">
-            <label for="name">الاسم:</label>
-            <input type="text" id="name" name="name" required>
-
-            <label for="civil_id">الرقم المدني (12 رقم):</label>
-            <input type="text" id="civil_id" name="civil_id" required minlength="12" maxlength="12" pattern="\d{12}">
-
-            <label for="phone">رقم الهاتف:</label>
-            <input type="tel" id="phone" name="phone">
-
-            <label for="email">البريد الإلكتروني:</label>
-            <input type="email" id="email" name="email">
-
-            <label for="address">العنوان:</label>
-            <textarea id="address" name="address" rows="3"></textarea>
-
-            <label for="notes">ملاحظات:</label>
-            <textarea id="notes" name="notes" rows="3"></textarea>
-
-            <button type="submit">أضف العميل</button>
-            <div id="formMessage" class="message" style="display:none;"></div>
-        </form>
-
-        <h2>قائمة العملاء</h2>
-        <ul id="clientsList">
-            <li>جاري تحميل العملاء...</li>
-        </ul>
+    <div class="sidebar">
+        <h2>ورشة النجارة</h2>
+        <ul>
+            <li><a href="#" id="navClients" class="active">إدارة العملاء</a></li>
+            </ul>
     </div>
+
+    <div class="main-content">
+        <div id="clientsSection" class="content-section">
+            <h1>إدارة العملاء</h1>
+            <h2>إضافة عميل جديد</h2>
+            <form id="addClientForm">
+                <label for="name">الاسم:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="civil_id">الرقم المدني (12 رقم):</label>
+                <input type="text" id="civil_id" name="civil_id" required minlength="12" maxlength="12" pattern="\d{12}">
+
+                <label for="phone">رقم الهاتف:</label>
+                <input type="tel" id="phone" name="phone">
+
+                <label for="email">البريد الإلكتروني:</label>
+                <input type="email" id="email" name="email">
+
+                <label for="address">العنوان:</label>
+                <textarea id="address" name="address" rows="3"></textarea>
+
+                <label for="notes">ملاحظات:</label>
+                <textarea id="notes" name="notes" rows="3"></textarea>
+
+                <button type="submit">أضف العميل</button>
+                <div id="formMessageClient" class="message" style="display:none;"></div>
+            </form>
+
+            <h2>قائمة العملاء</h2>
+            <ul id="clientsList">
+                <li>جاري تحميل العملاء...</li>
+            </ul>
+        </div>
+
+        </div>
 
     <script>
         const addClientForm = document.getElementById('addClientForm');
         const clientsListElement = document.getElementById('clientsList');
-        const formMessageElement = document.getElementById('formMessage');
+        const formMessageClientElement = document.getElementById('formMessageClient');
+        
+        const navClients = document.getElementById('navClients');
+        // const navProjects = document.getElementById('navProjects'); // عندما نضيف قسم المشاريع
 
+        const clientsSection = document.getElementById('clientsSection');
+        // const projectsSection = document.getElementById('projectsSection'); // عندما نضيف قسم المشاريع
+
+        // دالة لإظهار قسم معين وإخفاء الآخرين
+        function showSection(sectionToShow) {
+            clientsSection.style.display = 'none';
+            // projectsSection.style.display = 'none'; // عندما نضيف قسم المشاريع
+
+            if (sectionToShow === 'clients') {
+                clientsSection.style.display = 'block';
+                navClients.classList.add('active');
+                // navProjects.classList.remove('active'); // عندما نضيف قسم المشاريع
+                fetchClients(); // تحديث قائمة العملاء عند عرض القسم
+            } 
+            /*
+            else if (sectionToShow === 'projects') {
+                projectsSection.style.display = 'block';
+                navClients.classList.remove('active');
+                navProjects.classList.add('active');
+                // fetchProjects(); // سنحتاج لدالة لجلب المشاريع
+            }
+            */
+        }
+
+        // ربط أحداث النقر بروابط الشريط الجانبي
+        navClients.addEventListener('click', (e) => {
+            e.preventDefault(); // منع السلوك الافتراضي للرابط
+            showSection('clients');
+        });
+        /*
+        navProjects.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSection('projects');
+        });
+        */
+
+        // دالة لجلب وعرض العملاء
         async function fetchClients() {
             clientsListElement.innerHTML = '<li>جاري تحميل العملاء...</li>';
             try {
                 const response = await fetch('/clients');
                 if (!response.ok) {
-                    throw new Error(`خطأ HTTP: ${response.status} ${response.statusText}`);
+                    const errorData = await response.json().catch(() => ({ error: `خطأ HTTP: ${response.status} ${response.statusText}` }));
+                    throw new Error(errorData.error || `خطأ HTTP: ${response.status} ${response.statusText}`);
                 }
                 const clients = await response.json();
                 clientsListElement.innerHTML = ''; 
@@ -90,14 +201,15 @@
                 });
             } catch (error) {
                 console.error('فشل في جلب العملاء:', error);
-                clientsListElement.innerHTML = '<li>حدث خطأ أثناء تحميل العملاء. يرجى المحاولة لاحقاً.</li>';
+                clientsListElement.innerHTML = `<li>حدث خطأ أثناء تحميل العملاء: ${error.message}</li>`;
             }
         }
 
+        // التعامل مع إرسال نموذج إضافة عميل
         addClientForm.addEventListener('submit', async function(event) {
             event.preventDefault(); 
-            formMessageElement.textContent = '';
-            formMessageElement.style.display = 'none';
+            formMessageClientElement.textContent = '';
+            formMessageClientElement.style.display = 'none';
 
             const formData = new FormData(this);
             const clientData = {};
@@ -112,27 +224,29 @@
                     body: JSON.stringify(clientData),
                 });
 
-                const result = await response.json(); // دائماً حاول قراءة الـ JSON
+                const result = await response.json();
 
                 if (!response.ok) {
-                    // استخدم رسالة الخطأ من الـ API إذا كانت موجودة، وإلا استخدم رسالة عامة
                     throw new Error(result.error || `خطأ HTTP: ${response.status} ${response.statusText}`);
                 }
-
-                formMessageElement.textContent = 'تمت إضافة العميل بنجاح!';
-                formMessageElement.className = 'message success';
-                formMessageElement.style.display = 'block';
+                
+                formMessageClientElement.textContent = 'تمت إضافة العميل بنجاح!';
+                formMessageClientElement.className = 'message success'; // تغيير اسم الكلاس لرسالة العميل
+                formMessageClientElement.style.display = 'block';
                 this.reset(); 
                 fetchClients(); 
             } catch (error) {
                 console.error('فشل في إضافة العميل:', error);
-                formMessageElement.textContent = `فشل في إضافة العميل: ${error.message}`;
-                formMessageElement.className = 'message error';
-                formMessageElement.style.display = 'block';
+                formMessageClientElement.textContent = `فشل في إضافة العميل: ${error.message}`;
+                formMessageClientElement.className = 'message error'; // تغيير اسم الكلاس لرسالة العميل
+                formMessageClientElement.style.display = 'block';
             }
         });
 
-        document.addEventListener('DOMContentLoaded', fetchClients);
+        // إظهار قسم العملاء افتراضياً وجلب البيانات عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', () => {
+            showSection('clients'); // إظهار قسم العملاء كافتراضي
+        });
     </script>
 </body>
 </html>
